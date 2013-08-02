@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+          "http://jakarta.apache.org/struts/dtds/struts-config_1_2.dtd">
+<struts-config>
+
+<!-- ================================================ Form Bean Definitions -->
+
+	<form-beans>
+		<form-bean name="CommodityForm" type="jp.co.veritrans.airweb.sample.server.action.CommodityForm"/>
+		<form-bean name="CardForm" type="jp.co.veritrans.airweb.sample.server.action.card.CardForm"/>
+		<form-bean name="CvsForm" type="jp.co.veritrans.airweb.sample.server.action.cvs.CvsForm"/>
+		<form-bean name="DoPostForm" type="jp.co.veritrans.airweb.sample.server.action.DoPostForm"/>
+	</form-beans>
+
+<!-- ========================================= Global Exception Definitions -->
+
+	<global-exceptions>
+	</global-exceptions>
+
+<!-- =========================================== Global Forward Definitions -->
+
+	<global-forwards>
+	</global-forwards>
+
+<!-- =========================================== Action Mapping Definitions -->
+
+	<action-mappings>
+
+		<!-- 自画面遷移サンプル -->
+		<action
+			path="/confirmaction"
+			type="jp.co.veritrans.airweb.sample.server.action.ConfirmAction"
+			name="CommodityForm"
+			scope="request"
+			input="/jsp/self/entry.jsp"
+			validate="true">
+
+			<forward name="confirm" path="/jsp/self/jump.jsp"/>
+			<forward name="retry" path="/jsp/self/entry.jsp"/>
+		</action>
+
+		<action
+			path="/cardConfirmaction"
+			type="jp.co.veritrans.airweb.sample.server.action.card.CardAction"
+			name="CardForm"
+			scope="request"
+			input="/jsp/self/entry_card.jsp"
+			validate="true">
+
+			<forward name="confirm" path="/jsp/self/jump.jsp"/>
+			<forward name="retry" path="/jsp/self/entry_card.jsp"/>
+		</action>
+
+		<action
+			path="/cvsConfirmaction"
+			type="jp.co.veritrans.airweb.sample.server.action.cvs.CvsAction"
+			name="CvsForm"
+			scope="request"
+			input="/jsp/self/entry_cvs.jsp"
+			validate="true">
+
+			<forward name="confirm" path="/jsp/self/jump.jsp"/>
+			<forward name="retry" path="/jsp/self/entry_cvs.jsp"/>
+		</action>
+
+		<!-- インラインフレームサンプル -->
+		<action
+			path="/if_confirmaction"
+			type="jp.co.veritrans.airweb.sample.server.action.ConfirmAction"
+			name="CommodityForm"
+			scope="request"
+			input="/jsp/iframe/entry.jsp"
+			validate="true">
+
+			<forward name="confirm" path="/jsp/iframe/jump.jsp"/>
+			<forward name="retry" path="/jsp/iframe/entry.jsp"/>
+		</action>
+
+		<action
+			path="/if_cardConfirmaction"
+			type="jp.co.veritrans.airweb.sample.server.action.card.CardAction"
+			name="CardForm"
+			scope="request"
+			input="/jsp/iframe/entry_card.jsp"
+			validate="true">
+
+			<forward name="confirm" path="/jsp/iframe/jump.jsp"/>
+			<forward name="retry" path="/jsp/iframe/entry_card.jsp"/>
+		</action>
+
+		<action
+			path="/if_cvsConfirmaction"
+			type="jp.co.veritrans.airweb.sample.server.action.cvs.CvsAction"
+			name="CvsForm"
+			scope="request"
+			input="/jsp/iframe/entry_cvs.jsp"
+			validate="true">
+
+			<forward name="confirm" path="/jsp/iframe/jump.jsp"/>
+			<forward name="retry" path="/jsp/iframe/entry_cvs.jsp"/>
+		</action>
+
+		<!-- 決済処理完了 -->
+		<action
+			path="/dopostbrowser"
+			type="jp.co.veritrans.airweb.sample.server.action.DoPostActionBrowser"
+			name="DoPostForm"
+			scope="request"
+			input="/error.html"
+			validate="true">
+
+			<forward name="fin" path="/finish.html"/>
+			<forward name="err" path="/error.html"/>
+        </action>
+
+    </action-mappings>
+
+<!-- ============================================= Controller Configuration -->
+
+	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>
+
+<!-- ======================================== Message Resources Definitions -->
+
+    <message-resources parameter="MessageResources" />
+
+<!-- =============================================== Plug Ins Configuration -->
+
+	<!-- ======================================================= Tiles plugin -->
+	<plug-in className="org.apache.struts.tiles.TilesPlugin" >
+
+		<!-- Path to XML definition file -->
+		<set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml" />
+		<!-- Set Module-awareness to true -->
+		<set-property property="moduleAware" value="true" />
+	</plug-in>
+
+</struts-config>
+

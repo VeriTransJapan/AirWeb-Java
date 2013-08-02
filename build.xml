@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="euc-jp" ?>
+<project name="AirWebSample" default="deployapp" basedir=".">
+
+  <property name="project.name" value="AirWebSample" />
+  <property name="project.version" value="1.0" />
+  <property name="webapp.home" value="directory_of_web_application" />
+  <property name="app.name" value="AirWebJava" />
+  <property name="app.home" value="./" />
+  <property name="conf" value="conf" />
+  <property name="src" value="WEB-INF/src" />
+  <property name="dist" value="dist" />
+  <property name="build" value="build" />
+
+  <path id="compile.classpath">
+    <fileset dir="WEB-INF/lib">
+      <include name="*.jar" />
+    </fileset>
+  </path>
+
+  <path id="docs.classpath">
+    <path refid="compile.classpath" />
+  </path>
+
+  <target name="init">
+    <tstamp>
+      <format property="build.datetime" pattern="yyyy/MM/dd hh:mm:ss"/>
+    </tstamp>
+    <echo message="========== ${project.name} ${project.version} [${build.datetime}] =========="/>
+  </target>
+
+  <target name="compile" depends="init,clean">
+    <echo message="========== compile java sources =========="/>
+    <delete dir="${dist}/WEB-INF/classes" />
+    <mkdir dir="${dist}/WEB-INF/classes" />
+    <mkdir dir="${dist}/WEB-IMG" />
+    <mkdir dir="${dist}/css" />
+    <mkdir dir="${dist}/jsp" />
+    <mkdir dir="${dist}/jsp/common" />
+    <mkdir dir="${dist}/jsp/iframe" />
+    <mkdir dir="${dist}/jsp/self" />
+    <mkdir dir="${dist}/jsp/test" />
+	<mkdir dir="${dist}/en" />
+	<mkdir dir="${dist}/en/jsp" />
+    <mkdir dir="${dist}/en/jsp/common" />
+    <mkdir dir="${dist}/en/jsp/iframe" />
+    <mkdir dir="${dist}/en/jsp/self" />
+    <mkdir dir="${dist}/en/jsp/test" />
+    <javac
+      srcdir="${src}"
+      destdir="${dist}/WEB-INF/classes"
+      executable=""
+      defaultexcludes="false"
+      encoding="UTF-8"
+      debug="yes"
+      source="6"
+      excludes="**/package.html">
+      <classpath refid="compile.classpath" />
+    </javac>
+    <native2ascii
+      src="${conf}"
+      dest="${dist}/WEB-INF/classes"
+      encoding="UTF-8"
+  	  includes="**/*.properties"
+      ext=".properties" />
+    <copy todir="WEB-INF/classes">
+      <fileset dir="${dist}/WEB-INF/classes" includes="**/*.properties" />
+    </copy>
+    <copy todir="${dist}/WEB-INF">
+      <fileset dir="WEB-INF" includes="*.tld,*.xml" />
+    </copy>
+    <copy todir="${dist}/WEB-IMG">
+      <fileset dir="WEB-IMG" includes="*.gif,*.png,*.jpg,*.jpeg,*.bmp" />
+    </copy>
+    <copy todir="${dist}/css">
+      <fileset dir="css" includes="*.css" />
+    </copy>
+    <copy todir="${dist}/jsp/common">
+      <fileset dir="jsp/common" includes="*.jsp" />
+    </copy>
+    <copy todir="${dist}/jsp/iframe">
+      <fileset dir="jsp/iframe" includes="*.jsp" />
+    </copy>
+    <copy todir="${dist}/jsp/self">
+      <fileset dir="jsp/self" includes="*.jsp" />
+    </copy>
+    <copy todir="${dist}/jsp/test">
+      <fileset dir="jsp/test" includes="*.jsp" />
+    </copy>
+	<copy todir="${dist}/en">
+      <fileset dir="en" includes="*.html" />
+    </copy>
+    <copy todir="${dist}/en/jsp/common">
+      <fileset dir="en/jsp/common" includes="*.jsp" />
+    </copy>
+    <copy todir="${dist}/en/jsp/iframe">
+      <fileset dir="en/jsp/iframe" includes="*.jsp" />
+    </copy>
+    <copy todir="${dist}/en/jsp/self">
+      <fileset dir="en/jsp/self" includes="*.jsp" />
+    </copy>
+    <copy todir="${dist}/en/jsp/test">
+      <fileset dir="en/jsp/test" includes="*.jsp" />
+    </copy>
+  </target>
+
+  <target name="war" depends="compile">
+    <delete file="${dist}/${app.name}.war" />
+    <copy todir="${dist}">
+      <fileset dir="" includes="*.jsp,*.html,*.css" />
+    </copy>
+    <mkdir dir="${dist}/WEB-INF/lib" />
+    <copy todir="${dist}/WEB-INF/lib">
+      <fileset dir="WEB-INF/lib" includes="*.jar"/>
+    </copy>
+    <jar destfile="${dist}/${app.name}.war" basedir="${dist}" />
+  </target>
+
+  <target name="deployapp" depends="war">
+    <echo message="========== deploy application =========="/>
+    <move file="${dist}/${app.name}.war" todir="${app.home}" />
+  </target>
+
+  <target name="undeployapp">
+    <delete file="${app.home}/${app.name}.war"/>
+  </target>
+
+  <target name="clean">
+    <delete dir="${dist}" />
+  </target>
+
+</project>
