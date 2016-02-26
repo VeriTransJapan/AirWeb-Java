@@ -11,7 +11,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,7 +23,10 @@ import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import jp.co.veritrans.airweb.mdk.bean.CommodityDetail;
 import jp.co.veritrans.airweb.mdk.bean.EncryptionKey;
@@ -63,9 +68,28 @@ public class ConfirmAction extends BasicAction {
                 }
             });
 
+            TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+                @Override
+                public X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+                @Override
+                public void checkClientTrusted(final X509Certificate[] certs, final String authType) {
+                }
+
+                @Override
+                public void checkServerTrusted(final X509Certificate[] certs, final String authType) {
+                }
+            } };
+
             // URLクラスのインスタンスを生成
             MerchantConf info = MerchantConf.getInfo();
             URL accessURL = new URL(info.getAirWebRegistUrl());
+
+            SSLContext sc = SSLContext.getInstance("TLSv1.2");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 
             // 接続します
             URLConnection con = accessURL.openConnection();
@@ -121,6 +145,12 @@ public class ConfirmAction extends BasicAction {
             log.error("接続エラーです。", e);
             return null;
         } catch (IOException e) {
+            log.error("接続エラーです。", e);
+            return null;
+        } catch (NoSuchAlgorithmException e) {
+            log.error("接続エラーです。", e);
+            return null;
+        } catch (KeyManagementException e) {
             log.error("接続エラーです。", e);
             return null;
         }
